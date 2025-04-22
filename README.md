@@ -1,2 +1,2 @@
-# my_search
-Programmable search engine
+# dev-websearch 
+Programmable Google search engine - front end and custom rules
