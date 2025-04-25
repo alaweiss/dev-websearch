@@ -2,20 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Web Search</title>
-    <style>
-        body {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-        }
-    </style>
 </head>
 <body>
-    <!-- Single search element to test basic functionality -->
+    <!-- Single search element that includes both box and results -->
     <div class="gcse-search"></div>
+
+    <!-- Separate section for specific sites -->
+    <h2>Results from Recipe Sites</h2>
+    <div class="gcse-search" data-as_sitesearch="recipetineats.com,woksoflife.com"></div>
 
     <script async src="https://cse.google.com/cse.js?cx=45c8679de0ff14833"></script>
 </body>
