@@ -3,15 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Custom Web Search</title>
+    <script>
+        // Listen for searches in the main CSE
+        window.addEventListener('load', function() {
+            // Wait for CSE to load
+            setTimeout(function() {
+                const mainSearchInput = document.querySelector('input.gsc-input');
+                if (mainSearchInput) {
+                    mainSearchInput.addEventListener('change', function(e) {
+                        // Get the search query
+                        const query = e.target.value;
+                        // Find the second CSE's input and update it
+                        const secondInput = document.querySelectorAll('input.gsc-input')[1];
+                        if (secondInput && query) {
+                            secondInput.value = query;
+                            // Trigger search in second CSE
+                            const secondButton = document.querySelectorAll('.gsc-search-button')[1];
+                            if (secondButton) secondButton.click();
+                        }
+                    });
+                }
+            }, 1000); // Delay to ensure CSE is loaded
+        });
+    </script>
 </head>
 <body>
-    <!-- Single search element that includes both box and results -->
+    <!-- Main search -->
     <div class="gcse-search"></div>
 
-    <!-- Separate section for specific sites -->
-    <h2>Results from Recipe Sites</h2>
-    <div class="gcse-search" data-as_sitesearch="recipetineats.com,woksoflife.com"></div>
+    <h2>These sites ...</h2>
+    <!-- Second search engine (recipe sites only) -->
+    <div class="gcse-search" data-cseId="f50225736bfee46f6"></div>
 
+    <!-- Load both CSE scripts -->
     <script async src="https://cse.google.com/cse.js?cx=45c8679de0ff14833"></script>
+    <script async src="https://cse.google.com/cse.js?cx=f50225736bfee46f6"></script>
 </body>
 </html>
