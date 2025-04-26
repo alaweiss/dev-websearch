@@ -4,36 +4,37 @@
     <meta charset="UTF-8">
     <title>Custom Web Search</title>
     <script>
-        // Listen for searches in the main CSE
         window.addEventListener('load', function() {
-            // Wait for CSE to load
             setTimeout(function() {
-                const mainSearchInput = document.querySelector('input.gsc-input');
+                const mainSearchInput = document.querySelector('.main-search input.gsc-input');
                 if (mainSearchInput) {
                     mainSearchInput.addEventListener('change', function(e) {
-                        // Get the search query
                         const query = e.target.value;
-                        // Find the second CSE's input and update it
-                        const secondInput = document.querySelectorAll('input.gsc-input')[1];
+                        const secondInput = document.querySelector('.excluded-search input.gsc-input');
                         if (secondInput && query) {
                             secondInput.value = query;
-                            // Trigger search in second CSE
-                            const secondButton = document.querySelectorAll('.gsc-search-button')[1];
+                            const secondButton = document.querySelector('.excluded-search .gsc-search-button');
                             if (secondButton) secondButton.click();
                         }
                     });
                 }
-            }, 1000); // Delay to ensure CSE is loaded
+            }, 1000);
         });
     </script>
 </head>
 <body>
     <!-- Main search -->
-    <div class="gcse-search"></div>
+    <div class="main-search">
+        <div class="gcse-searchbox"></div>
+        <div class="gcse-searchresults"></div>
+    </div>
 
-    <h2>These sites ...</h2>
+    <h2>Results from Recipe Sites</h2>
     <!-- Second search engine (recipe sites only) -->
-    <div class="gcse-search" data-cseId="f50225736bfee46f6"></div>
+    <div class="excluded-search">
+        <div class="gcse-searchbox"></div>
+        <div class="gcse-searchresults"></div>
+    </div>
 
     <!-- Load both CSE scripts -->
     <script async src="https://cse.google.com/cse.js?cx=45c8679de0ff14833"></script>
