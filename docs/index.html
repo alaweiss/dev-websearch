@@ -4,107 +4,42 @@
   <meta charset="UTF-8">
   <title>Custom Web Search</title>
   <script>
-    // Configuration object for search instances
-    const SEARCH_CONFIG = {
-      main: {
-        id: 'main-search-instance',
-        cx: '45c8679de0ff14833',
-        elementId: 'main-search'
-      },
-      exclude: {
-        id: 'exclude-search-instance',
-        cx: 'f50225736bfee46f6',
-        elementId: 'excluded-search'
-      }
-    };
-
-    // Handles sequential initialization of search instances
-    class SearchInitializer {
-      constructor() {
-        this.mainInitialized = false;
-        this.excludeInitialized = false;
-      }
-
-      async initializeMain() {
-        await this.loadSearchScript('main');
-        this.mainInitialized = true;
-      }
-
-      async initializeExclude() {
-        if (!this.mainInitialized) {
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          return this.initializeExclude();
-        }
-        await this.loadSearchScript('exclude');
-        this.excludeInitialized = true;
-      }
-
-      loadSearchScript(type) {
-        const config = SEARCH_CONFIG[type];
-        return new Promise((resolve) => {
-          const script = document.createElement('script');
-          script.src = `https://cse.google.com/cse.js?cx=${config.cx}`;
-          script.async = true;
-          script.onload = resolve;
-          document.head.appendChild(script);
-        });
-      }
+    // Wait for main search to load before loading excluded search
+    function loadExcludedSearch() {
+      const script = document.createElement('script');
+      script.src = "https://cse.google.com/cse.js?cx=f50225736bfee46f6&gname=exclude";
+      script.async = true;
+      document.head.appendChild(script);
     }
 
-    // Handles synchronization between search boxes
-    class SearchSynchronizer {
-      constructor() {
-        this.mainInput = null;
-        this.excludeInput = null;
-        this.excludeButton = null;
+    // Sync the search boxes with retry
+    function syncSearchBoxes() {
+      const mainInput = document.querySelector('#main-search input.gsc-input');
+      const excludeInput = document.querySelector('#excluded-search input.gsc-input');
+      const excludeButton = document.querySelector('#excluded-search .gsc-search-button');
+
+      if (!mainInput || !excludeInput || !excludeButton) {
+        setTimeout(syncSearchBoxes, 250); // retry if elements aren't ready
+        return;
       }
 
-      initializeSync() {
-        this.findElements();
-        if (!this.areElementsReady()) {
-          setTimeout(() => this.initializeSync(), 250);
-          return;
-        }
-        this.bindEvents();
-      }
-
-      findElements() {
-        this.mainInput = document.querySelector(`#${SEARCH_CONFIG.main.elementId} input.gsc-input`);
-        this.excludeInput = document.querySelector(`#${SEARCH_CONFIG.exclude.elementId} input.gsc-input`);
-        this.excludeButton = document.querySelector(`#${SEARCH_CONFIG.exclude.elementId} .gsc-search-button`);
-      }
-
-      areElementsReady() {
-        return this.mainInput && this.excludeInput && this.excludeButton;
-      }
-
-      bindEvents() {
-        this.mainInput.addEventListener('change', (e) => {
-          this.excludeInput.value = e.target.value;
-          this.excludeButton.click();
-        });
-      }
+      mainInput.addEventListener('change', function(e) {
+        excludeInput.value = e.target.value;
+        excludeButton.click();
+      });
     }
 
-    // Google CSE callback configuration
+    // Initialize main search first
     window.__gcse = {
       parsetags: 'explicit',
       callback: function() {
-        const synchronizer = new SearchSynchronizer();
-        synchronizer.initializeSync();
+        syncSearchBoxes();
+        loadExcludedSearch(); // load second search after main is ready
       }
     };
-
-    // Initialize search instances
-    async function initializeSearch() {
-      const initializer = new SearchInitializer();
-      await initializer.initializeMain();
-      await initializer.initializeExclude();
-    }
-
-    // Start initialization when DOM is ready
-    document.addEventListener('DOMContentLoaded', initializeSearch);
   </script>
+  <!-- Load main search first -->
+  <script async src="https://cse.google.com/cse.js?cx=45c8679de0ff14833&gname=main"></script>
 </head>
 <body>
   <!-- Main search engine -->
