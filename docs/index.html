@@ -1,59 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Custom Web Search</title>
-  <script>
-    // Wait for main search to load before loading excluded search
-    function loadExcludedSearch() {
-      const script = document.createElement('script');
-      script.src = "https://cse.google.com/cse.js?cx=f50225736bfee46f6&gname=exclude";
-      script.async = true;
-      document.head.appendChild(script);
-    }
-
-    // Sync the search boxes with retry
-    function syncSearchBoxes() {
-      const mainInput = document.querySelector('#main-search input.gsc-input');
-      const excludeInput = document.querySelector('#excluded-search input.gsc-input');
-      const excludeButton = document.querySelector('#excluded-search .gsc-search-button');
-
-      if (!mainInput || !excludeInput || !excludeButton) {
-        setTimeout(syncSearchBoxes, 250); // retry if elements aren't ready
-        return;
-      }
-
-      mainInput.addEventListener('change', function(e) {
-        excludeInput.value = e.target.value;
-        excludeButton.click();
-      });
-    }
-
-    // Initialize main search first
-    window.__gcse = {
-      parsetags: 'explicit',
-      callback: function() {
-        syncSearchBoxes();
-        loadExcludedSearch(); // load second search after main is ready
-      }
-    };
-  </script>
-  <!-- Load main search first -->
-  <script async src="https://cse.google.com/cse.js?cx=45c8679de0ff14833&gname=main"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silly Site</title>
 </head>
 <body>
-  <!-- Main search engine -->
-  <div id="main-search">
-    <div class="gcse-searchbox" data-gname="main"></div>
-    <div class="gcse-searchresults" data-gname="main"></div>
-  </div>
-
-  <h2>Results from Recipe Sites</h2>
-  
-  <!-- Excluded sites search engine -->
-  <div id="excluded-search">
-    <div class="gcse-searchbox" data-gname="exclude"></div>
-    <div class="gcse-searchresults" data-gname="exclude"></div>
-  </div>
+    <h1>silly site</h1>
+    <p>here I am</p>
+    <iframe srcdoc="<p>in the window</p>" style="width: 200px; height: 100px;"></iframe>
+    <p><a href="glass.html">follow me</a></p>
 </body>
 </html>
