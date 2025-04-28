@@ -3,12 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silly Site</title>
+    <title>Simple Recipe Search</title>
 </head>
 <body>
-    <h1>silly site</h1>
-    <p>here I am</p>
-    <iframe srcdoc="<p>in the window</p>" style="width: 200px; height: 100px;"></iframe>
-    <p><a href="glass.html">follow me</a></p>
+    <h1>Recipe Search</h1>
+
+    <div>
+        <h2>Main Search Box</h2>
+        <script async src="https://cse.google.com/cse.js?cx=45c8679de0ff14833"></script>
+        <div class="gcse-searchbox"></div>
+    </div>
+
+    <div>
+        <h2>Main Results Area</h2>
+        <div class="gcse-searchresults"></div>
+    </div>
+
+    <div>
+        <h2>Excluded Sites Query Display</h2>
+        <iframe id="excludedFrame" src="excluded-query.html"></iframe>
+    </div>
+
+    <script>
+        let mainSearchInput;
+        const observerSimple = new MutationObserver(mutationsList => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    const inputElement = document.querySelector('.gsc-input-box input.gsc-input');
+                    if (inputElement) {
+                        mainSearchInput = inputElement;
+                        observerSimple.disconnect();
+
+                        mainSearchInput.addEventListener('change', function(event) {
+                            const query = event.target.value;
+                            const frame = document.getElementById('excludedFrame');
+                            if (frame && frame.contentWindow) {
+                                frame.contentWindow.postMessage({ query: query }, '*');
+                                console.log('Sent simple query to iframe:', query);
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+        });
+
+        observerSimple.observe(document.body, { childList: true, subtree: true });
+    </script>
+
 </body>
 </html>
