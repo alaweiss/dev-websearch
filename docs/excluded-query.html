@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluded Query</title>
+</head>
+<body>
+    <div id="queryDisplay">No query yet.</div>
+
+    <script>
+        window.addEventListener('message', function(event) {
+            const received = event.data;
+            if (received && received.query) {
+                document.getElementById('queryDisplay').textContent = "Current query: " + received.query;
+                console.log('Iframe received simple query:', received.query);
+                // In a real app, API call for excluded sites would go here
+            }
+        });
+
+        console.log('Simple excluded iframe loaded.');
+    </script>
+</body>
+</html>
